@@ -4,7 +4,6 @@
 
 <img width="696" height="945" alt="图片" src="https://github.com/user-attachments/assets/ccdf0277-fd61-4045-8aa5-8a810630c4a9" />
 
-
 ## AI代码警告
 本插件所有代码均为AI生成，人为修改不到1%
 
@@ -18,12 +17,13 @@
 
 ## 安装与配置
 1.  **安装插件**：
-    *   通过 AnkiWeb 页面下载，或使用代码 `[发布后获得的ID]` 安装本插件。
+    *   通过 AnkiWeb 页面下载，或使用代码 `[724150025]` 安装本插件。
     *   通过 AnkiWeb 页面下载，或使用代码 `[1020366288]` 安装依赖插件Edit Field During Review。
 
-2.  **获取 Gemini API Key**：
+2.  **获取 Gemini API Key（或者别的AI的API）**：
     *   访问 [Google AI Studio](https://aistudio.google.com/app/apikey)。
     *   点击 "Create API key" 生成你的密钥。
+    *   其他AI大概也行，自己想办法搞
 
 3.  **配置插件**：
     *   在 Anki 主界面，点击菜单栏的 **工具 > AI提问配置**。
