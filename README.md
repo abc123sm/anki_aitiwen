@@ -123,6 +123,9 @@ function copyReading(button) {
 
 ```
 
+## 效果
+<img width="1154" height="1222" alt="图片" src="https://github.com/user-attachments/assets/8cfe2698-9a11-4eac-8a38-f46cfdbd177b" />
+
 
 ## 问题反馈
 
