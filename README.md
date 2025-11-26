@@ -2,6 +2,9 @@
 
 本插件允许你在 Anki 复习卡片时，一键调用 Google Gemini AI（或者其他AI），对日语句子进行详细的语法和词汇解析（或者问别的问题，可以设置自己设置上下文与prompt），并将结果自动填入指定字段（需要配合1020366288插件）。
 
+<img width="696" height="945" alt="图片" src="https://github.com/user-attachments/assets/ccdf0277-fd61-4045-8aa5-8a810630c4a9" />
+
+
 ## AI代码警告
 本插件所有代码均为AI生成，人为修改不到1%
 
