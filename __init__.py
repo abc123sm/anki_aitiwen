@@ -214,7 +214,7 @@ def call_gemini_api(question):
             # 添加模型确认消息
             messages.append({
                 "role": "model",
-                "parts": [{"text": "明白了，我将严格按照您的要求处理日语句子。"}]
+                "parts": [{"text": "明白了，我将严格按照您的要求处理。"}]
             })
             
             # 添加上下文消息
