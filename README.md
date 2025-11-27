@@ -132,6 +132,10 @@ function copyReading(button) {
 
 ## 问题反馈
 
-如果你遇到任何问题或有功能建议，欢迎到本项目的 [GitHub Issues](https://github.com/abc123sm/anki_aitiwen/issues) 页面提交。
+如果你遇到任何问题或有功能建议，欢迎到本项目的 [GitHub Issues](https://github.com/abc123sm/anki_aitiwen/issues) 页面提交。  
+或者 [这个TG频道](https://t.me/Subs2srs/177)。
+
+## 更新
+25/11/28 修改了设置的逻辑，更新插件后不需要重新配置config，并且修改了报错时回复的逻辑，API调用错误不会再返回完整的api请求，而是会把apikey遮蔽，避免直播学习时漏出apikey，然后还有一些跟回报相关的逻辑也改了
 
 ---
