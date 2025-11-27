@@ -1,13 +1,9 @@
 {
     "package": "AItiwen",
     "name": "AI提问",
-    "version": "1.0.2",
+    "version": "1.0.5",
     "author": "ABC123SM",
     "description": "本插件允许你在 Anki 复习卡片时，一键调用 Google Gemini AI（或者其他AI），对日语句子进行详细的语法和词汇解析（或者问别的问题，可以设置自己设置上下文与prompt），并将结果自动填入指定字段（需要配合1020366288插件）",
-    "homepage": "",
-    "mod": 0,
-	"min_point_version": 211000,
-	"max_point_version": 211000,
-	"branch_index": 1,
+    "homepage": "https://github.com/abc123sm/anki_aitiwen",
     "conflicts": []
 }

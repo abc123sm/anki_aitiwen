@@ -6,10 +6,6 @@ import requests
 import os
 import time
 
-# 插件目录路径
-addon_dir = os.path.dirname(__file__)
-config_path = os.path.join(addon_dir, 'config.json')
-
 DEFAULT_CONFIG = {
   "apikey": "ABC123SM",
   "apiurl": "https://generativelanguage.googleapis.com",
@@ -22,86 +18,51 @@ DEFAULT_CONFIG = {
   "question_field": "Expression",
   "answer_field": "Edit",
   "context_messages": [
-    {
-      "role": "user",
-      "content": "なんと！　与えたほうまで元気に？"
-    },
-    {
-      "role": "assistant",
-      "content": "なんと！：表示惊讶，\"竟然！\"\n与[あた]えたほうまで：表示连同给予者，\"连给的那一方也\"\n元気[げんき]に？：表示疑问，\"精神起来了？\"\n竟然！连给予者都精神起来了？"
-    },
-    {
-      "role": "user",
-      "content": "分かった １日に持ってくで"
-    },
-    {
-      "role": "assistant",
-      "content": "分[わ]かった：表示理解，\"明白了\"\n１日[ついたち]に：表示日期，\"在1号\"\n持[も]ってくで：表示动作和意愿，\"会拿过去/带来\"\n明白了，1号会拿过去。"
-    },
-    {
-      "role": "user",
-      "content": "何が ‎みんなで協力すれば何とかなるだ"
-    },
-    {
-      "role": "assistant",
-      "content": "何[なに]が：表示疑问或反驳，\"什么\"\nみんなで：表示共同行动，\"大家一起\"\n協力[きょうりょく]すれば：表示条件，\"如果合作的话\"\n何[なん]とかなるだ：表示可以解决，\"就能解决什么的\"\n什么大家一起合作就能解决啊。"
-    },
-    {
-      "role": "user",
-      "content": "外からは　見えないようにしておるのじゃが"
-    },
-    {
-      "role": "assistant",
-      "content": "外[そと]からは：表示来源或视角，\"从外面\"\n見[み]えないように：表示目的或状态，\"为了不被看到\"\nしておるのじゃが：表示持续的状态或情况，带有强调，\"正在做着呢\"\n从外面看是看不到的。"
-    },
-    {
-      "role": "user",
-      "content": "来た！　腹を決めやがった"
-    },
-    {
-      "role": "assistant",
-      "content": "来[き]た！：表示出现，\"来了！\"\n腹[はら]を：指决心或意志，\"心意\"\n決[き]めやがった：表示下决心（带有粗鲁或不屑的语气），\"下定了\"\n来了！他下定决心了。"
-    },
-    {
-      "role": "user",
-      "content": "負けるのが分かってる　皿を出すのが怖いんだ"
-    },
-    {
-      "role": "assistant",
-      "content": "負[ま]けるのが：表示失败，\"会输\"\n分[わ]かってる：表示已知晓，\"知道了\"\n皿[さら]を：指要下的棋子或牌，\"盘子（棋子）\"\n出[だ]すのが：表示拿出或下，\"拿出来\"\n怖[こわ]いんだ：表示心情，\"很害怕\"\n知道会输，所以不敢下棋（出牌）。"
-    }
+    { "role": "user", "content": "なんと！　与えたほうまで元気に？" },
+    { "role": "assistant", "content": "なんと！：表示惊讶，\"竟然！\"\n与[あた]えたほうまで：表示连同给予者，\"连给的那一方也\"\n元気[げんき]に？：表示疑问，\"精神起来了？\"\n竟然！连给予者都精神起来了？" },
+    { "role": "user", "content": "分かった １日に持ってくで" },
+    { "role": "assistant", "content": "分[わ]かった：表示理解，\"明白了\"\n１日[ついたち]に：表示日期，\"在1号\"\n持[も]ってくで：表示动作和意愿，\"会拿过去/带来\"\n明白了，1号会拿过去。" },
+    { "role": "user", "content": "何が ‎みんなで協力すれば何とかなるだ" },
+    { "role": "assistant", "content": "何[なに]が：表示疑问或反驳，\"什么\"\nみんなで：表示共同行动，\"大家一起\"\n協力[きょうりょく]すれば：表示条件，\"如果合作的话\"\n何[なん]とかなるだ：表示可以解决，\"就能解决什么的\"\n什么大家一起合作就能解决啊。" },
+    { "role": "user", "content": "外からは　見えないようにしておるのじゃが" },
+    { "role": "assistant", "content": "外[そと]からは：表示来源或视角，\"从外面\"\n見[み]えないように：表示目的或状态，\"为了不被看到\"\nしておるのじゃが：表示持续的状态或情况，带有强调，\"正在做着呢\"\n从外面看是看不到的。" },
+    { "role": "user", "content": "来た！　腹を決めやがった" },
+    { "role": "assistant", "content": "来[き]た！：表示出现，\"来了！\"\n腹[はら]を：指决心或意志，\"心意\"\n決[き]めやがった：表示下决心（带有粗鲁或不屑的语气），\"下定了\"\n来了！他下定决心了。" },
+    { "role": "user", "content": "負けるのが分かってる　皿を出すのが怖いんだ" },
+    { "role": "assistant", "content": "負[ま]けるのが：表示失败，\"会输\"\n分[わ]かってる：表示已知晓，\"知道了\"\n皿[さら]を：指要下的棋子或牌，\"盘子（棋子）\"\n出[だ]すのが：表示拿出或下，\"拿出来\"\n怖[こわ]いんだ：表示心情，\"很害怕\"\n知道会输，所以不敢下棋（出牌）。" }
   ]
 }
 
-def ensure_config_exists():
-    """如果 config.json 不存在，则创建并写入默认配置"""
-    if not os.path.exists(config_path):
-        try:
-            with open(config_path, 'w', encoding='utf-8') as f:
-                json.dump(DEFAULT_CONFIG, f, ensure_ascii=False, indent=2)
-            tooltip("已创建默认 config.json")
-        except Exception as e:
-            showInfo(f"无法创建默认配置文件: {str(e)}")
 
 def get_config():
-    """加载 config.json，如果不存在则自动创建"""
-    ensure_config_exists()
-    try:
-        with open(config_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception as e:
-        showInfo(f"读取配置失败: {str(e)}")
-        return None
+    """使用 Anki API 加载配置，如果不存在则自动创建"""
+    config = mw.addonManager.getConfig(__name__)
+    if config is None:
+        # 第一次运行，写入并返回默认配置
+        mw.addonManager.writeConfig(__name__, DEFAULT_CONFIG)
+        return DEFAULT_CONFIG
+    
+    # 检查是否有在更新后新增的配置项，并合并
+    config_updated = False
+    for key, value in DEFAULT_CONFIG.items():
+        if key not in config:
+            config[key] = value
+            config_updated = True
+    
+    if config_updated:
+        mw.addonManager.writeConfig(__name__, config)
+        
+    return config
 
 def save_config(config):
-    """保存配置"""
+    """使用 Anki API 保存配置"""
     try:
-        with open(config_path, 'w', encoding='utf-8') as f:
-            json.dump(config, f, ensure_ascii=False, indent=2)
+        mw.addonManager.writeConfig(__name__, config)
         return True
     except Exception as e:
         showInfo(f"保存配置失败: {str(e)}")
         return False
+
 
 class ConfigDialog(QDialog):
     def __init__(self, parent=None):
@@ -324,8 +285,6 @@ def call_gemini_api(question):
             
             candidates = result.get("candidates")
             if not candidates:
-                # 如果连 "candidates" 字段都没有，说明返回了非预期的格式
-                # 这种情况可能是 promptFeedback 提示输入内容就有问题
                 if result.get("promptFeedback"):
                     block_reason = result["promptFeedback"].get("blockReason", "未知")
                     return f"API请求被拒绝，原因: {block_reason}。请检查输入内容。"
@@ -337,7 +296,6 @@ def call_gemini_api(question):
             if content and content.get("parts"):
                 response_text = content["parts"][0].get("text", "")
                 
-                # 检查是否需要重试 (逻辑不变)
                 if "SPECIAL INSTRUCTION: think silently if needed." in response_text:
                     retry_count += 1
                     if retry_count < max_retries:
@@ -348,13 +306,12 @@ def call_gemini_api(question):
                 
                 return response_text
             else:
-                # 如果没有有效内容，检查停止原因
                 finish_reason = candidate.get("finishReason", "未知")
                 if finish_reason == "SAFETY":
                     return "API调用成功，但内容因安全原因被过滤。"
                 else:
                     return f"API未返回有效内容 (原因: {finish_reason})。可能是模型无法回答或内容为空。"
-            # --- 修改结束 ---
+
 
         except Exception as e:
             error_message = str(e)
@@ -402,29 +359,22 @@ def generate_ai_response():
         # 调用API
         response = call_gemini_api(question)
         
-        # [修改1] 将换行符 \n 替换为HTML的 <br>
+        # 将换行符 \n 替换为HTML的 <br>
         response_html = response.replace('\r\n', '<br>').replace('\n', '<br>')
         
-        # [修改2] 先将新内容保存到数据库
-        # 这一步仍然是必要的，确保数据被持久化
         if note[answer_field] != response_html:
             note[answer_field] = response_html
             note.flush()
         
-        # [修改3 - 核心] 使用JavaScript直接更新当前页面的内容，而不是刷新整个卡片
-        # 这样做可以完美兼容 "Edit Field During Review" 插件
         if mw.reviewer.state == "answer":
-            # 使用 json.dumps 来安全地将HTML内容转义为JavaScript字符串
             escaped_html = json.dumps(response_html)
             
-            # 构建JavaScript代码，找到对应的可编辑字段并更新其内容
             js_code = f"""
             var field = document.querySelector('[data-field="{answer_field}"]');
             if (field) {{
                 field.innerHTML = {escaped_html};
             }}
             """
-            # 执行JavaScript
             mw.reviewer.web.eval(js_code)
 
         tooltip("AI回复已生成并更新")
