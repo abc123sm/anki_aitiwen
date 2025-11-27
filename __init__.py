@@ -10,13 +10,83 @@ import time
 addon_dir = os.path.dirname(__file__)
 config_path = os.path.join(addon_dir, 'config.json')
 
+DEFAULT_CONFIG = {
+  "apikey": "ABC123SM",
+  "apiurl": "https://generativelanguage.googleapis.com",
+  "model": "gemini-2.5-flash",
+  "max_context": 6,
+  "temperature": 0.7,
+  "top_p": 1.0,
+  "max_tokens": 1000,
+  "system_prompt": "你是一个专业的日语语言助手，负责处理日语句子的标注和解析。严格遵循以下规则：\n\n1. 处理规则：\n- 对所有汉字添加正确的假名标注，使用[ ]包裹\n- 保留原始句子格式和分段\n\n2. 标注原则：\n- 汉字必须标注对应的读音假名\n- 标注时不改变原句结构\n- 保留原文中的数字、标点和其他特殊符号\n- 仅对汉字进行标注，不对平假名或片假名进行标注\n\n3. 解析要求：\n- 将句子拆分为3至8个语法单元\n- 每个单元包含：\n  * 原文（有汉字则标注[ ]）\n  * 简洁的语义解释（避免使用语法术语）\n\n4. 输出格式：\n- 拆分单元：语义解释\n- 整体中文翻译\n\n5. 输出要求： \n- 只使用文本回复，不使用markdown语法\n- 只进行单个换行\n- 不分段\n- 假名不需要再用假名标注\n- 不要在输出中包含原句或格式要求的说明\n\n6. 输出示例：\nその：表示指示，\"那个\"\n度[たび]：表示次数或事件，\"次\"\n１人[ひとり] で：表示独自，\"一个人\"\n何[なん]とか して きた：表示尽力做，\"想办法做了\"\nん だ：表示解释或强调，\"呢\"\n每次都是一个人尽力去做的。",
+  "question_field": "Expression",
+  "answer_field": "Edit",
+  "context_messages": [
+    {
+      "role": "user",
+      "content": "なんと！　与えたほうまで元気に？"
+    },
+    {
+      "role": "assistant",
+      "content": "なんと！：表示惊讶，\"竟然！\"\n与[あた]えたほうまで：表示连同给予者，\"连给的那一方也\"\n元気[げんき]に？：表示疑问，\"精神起来了？\"\n竟然！连给予者都精神起来了？"
+    },
+    {
+      "role": "user",
+      "content": "分かった １日に持ってくで"
+    },
+    {
+      "role": "assistant",
+      "content": "分[わ]かった：表示理解，\"明白了\"\n１日[ついたち]に：表示日期，\"在1号\"\n持[も]ってくで：表示动作和意愿，\"会拿过去/带来\"\n明白了，1号会拿过去。"
+    },
+    {
+      "role": "user",
+      "content": "何が ‎みんなで協力すれば何とかなるだ"
+    },
+    {
+      "role": "assistant",
+      "content": "何[なに]が：表示疑问或反驳，\"什么\"\nみんなで：表示共同行动，\"大家一起\"\n協力[きょうりょく]すれば：表示条件，\"如果合作的话\"\n何[なん]とかなるだ：表示可以解决，\"就能解决什么的\"\n什么大家一起合作就能解决啊。"
+    },
+    {
+      "role": "user",
+      "content": "外からは　見えないようにしておるのじゃが"
+    },
+    {
+      "role": "assistant",
+      "content": "外[そと]からは：表示来源或视角，\"从外面\"\n見[み]えないように：表示目的或状态，\"为了不被看到\"\nしておるのじゃが：表示持续的状态或情况，带有强调，\"正在做着呢\"\n从外面看是看不到的。"
+    },
+    {
+      "role": "user",
+      "content": "来た！　腹を決めやがった"
+    },
+    {
+      "role": "assistant",
+      "content": "来[き]た！：表示出现，\"来了！\"\n腹[はら]を：指决心或意志，\"心意\"\n決[き]めやがった：表示下决心（带有粗鲁或不屑的语气），\"下定了\"\n来了！他下定决心了。"
+    },
+    {
+      "role": "user",
+      "content": "負けるのが分かってる　皿を出すのが怖いんだ"
+    },
+    {
+      "role": "assistant",
+      "content": "負[ま]けるのが：表示失败，\"会输\"\n分[わ]かってる：表示已知晓，\"知道了\"\n皿[さら]を：指要下的棋子或牌，\"盘子（棋子）\"\n出[だ]すのが：表示拿出或下，\"拿出来\"\n怖[こわ]いんだ：表示心情，\"很害怕\"\n知道会输，所以不敢下棋（出牌）。"
+    }
+  ]
+}
+
+def ensure_config_exists():
+    """如果 config.json 不存在，则创建并写入默认配置"""
+    if not os.path.exists(config_path):
+        try:
+            with open(config_path, 'w', encoding='utf-8') as f:
+                json.dump(DEFAULT_CONFIG, f, ensure_ascii=False, indent=2)
+            tooltip("已创建默认 config.json")
+        except Exception as e:
+            showInfo(f"无法创建默认配置文件: {str(e)}")
+
 def get_config():
-    """获取配置"""
+    """加载 config.json，如果不存在则自动创建"""
+    ensure_config_exists()
     try:
-        if not os.path.exists(config_path):
-            showInfo("请先在插件目录中创建config.json文件")
-            return None
-            
         with open(config_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
@@ -251,24 +321,47 @@ def call_gemini_api(question):
             response.raise_for_status()
             
             result = response.json()
-            if "candidates" in result and len(result["candidates"]) > 0:
-                response_text = result["candidates"][0]["content"]["parts"][0]["text"]
+            
+            candidates = result.get("candidates")
+            if not candidates:
+                # 如果连 "candidates" 字段都没有，说明返回了非预期的格式
+                # 这种情况可能是 promptFeedback 提示输入内容就有问题
+                if result.get("promptFeedback"):
+                    block_reason = result["promptFeedback"].get("blockReason", "未知")
+                    return f"API请求被拒绝，原因: {block_reason}。请检查输入内容。"
+                return "API返回格式错误，未找到'candidates'。"
+
+            candidate = candidates[0]
+            content = candidate.get("content")
+            
+            if content and content.get("parts"):
+                response_text = content["parts"][0].get("text", "")
                 
-                # 检查是否需要重试
+                # 检查是否需要重试 (逻辑不变)
                 if "SPECIAL INSTRUCTION: think silently if needed." in response_text:
                     retry_count += 1
                     if retry_count < max_retries:
-                        time.sleep(1)  # 等待1秒后重试
+                        time.sleep(1)
                         continue
                     else:
                         return "API返回特殊指令，请稍后重试"
                 
                 return response_text
             else:
-                return f"API返回格式错误"
-                
+                # 如果没有有效内容，检查停止原因
+                finish_reason = candidate.get("finishReason", "未知")
+                if finish_reason == "SAFETY":
+                    return "API调用成功，但内容因安全原因被过滤。"
+                else:
+                    return f"API未返回有效内容 (原因: {finish_reason})。可能是模型无法回答或内容为空。"
+            # --- 修改结束 ---
+
         except Exception as e:
-            return f"API调用错误: {str(e)}"
+            error_message = str(e)
+            api_key = config.get("apikey")
+            if api_key:
+                error_message = error_message.replace(api_key, "[API_KEY_REDACTED]")
+            return f"API调用错误: {error_message}"
     
     return "重试次数用尽"
 
